@@ -1,5 +1,7 @@
 site_name: Sword Chronicle
 site_description: Manual de rol - Feudal Fantasy Roleplaying
+docs_dir: .
+
 theme:
   name: material
   language: es
