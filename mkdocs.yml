@@ -1,5 +1,7 @@
 site_name: Sword Chronicle
 site_description: Manual de rol - Feudal Fantasy Roleplaying
+docs_dir: docs
+
 theme:
   name: material
   language: es
@@ -22,31 +24,25 @@ theme:
     - search.suggest
     - search.highlight
 
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
 nav:
   - Inicio: index.md
   - Reglas del Juego:
     - El Sistema: reglas/sistema.md
     - Pruebas y Dificultad: reglas/pruebas.md
+    - Glosario: reglas/glosario.md
   - Creación de Personajes:
-    - Concepto: creacion/concepto.md
-    - Habilidades: creacion/habilidades.md
+    - Introducción y Concepto: creacion/introduccion.md
+    - Habilidades y Estadísticas: creacion/asignar-stats.md
+    - Recompensas y Resumen: creacion/recompensas.md
   - Habilidades y Especialidades:
     - Resumen: habilidades/resumen.md
+    - Detalle: habilidades/detalladas.md
   - Destino y Cualidades:
     - Puntos de Destino: destino/puntos.md
-  - Casa y Tierras:
-    - Crear la Casa: casa/crear.md
-  - Hechicería:
-    - Esenciales: magia/esenciales.md
-  - Equipo:
-    - Armas y Armaduras: equipo/armas.md
-  - Intriga:
-    - Reglas de Intriga: intriga/reglas.md
-  - Combate:
-    - Reglas de Combate: combate/reglas.md
-  - Guerra:
-    - Reglas de Guerra: guerra/reglas.md
-  - El Narrador:
-    - Guía del Narrador: narrador/guia.md
-  - La Era Fragmentada:
-    - El Mundo: setting/mundo.md
+    - Beneficios: destino/beneficios.md
+    - Defectos: destino/defectos.md
