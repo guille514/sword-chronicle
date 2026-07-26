@@ -1,0 +1,148 @@
+/* Hacer el TOC más compacto en móviles */
+@media screen and (max-width: 1220px) {
+  .md-sidebar--secondary {
+    display: none;
+  }
+}
+/* ===== MEJORAS PARA LA TABLA DE CONTENIDOS FLOTANTE ===== */
+
+/* Hacer el TOC más visible y atractivo */
+.md-sidebar--secondary {
+  background: var(--md-default-bg-color);
+  border-left: 2px solid var(--md-primary-fg-color--light);
+  padding: 1rem 0.5rem;
+}
+
+/* Estilo para los enlaces del TOC */
+.md-nav--secondary .md-nav__link {
+  font-size: 0.82rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.md-nav--secondary .md-nav__link:hover {
+  background: var(--md-primary-fg-color--light);
+  color: var(--md-primary-bg-color);
+}
+
+/* Resaltar el enlace activo en el TOC */
+.md-nav--secondary .md-nav__link--active {
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  font-weight: 600;
+  border-left: 3px solid var(--md-accent-fg-color);
+}
+
+/* Estilo para los enlaces permanentes (permalink) */
+.md-nav--secondary .md-nav__link .headerlink {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  margin-left: 0.5rem;
+  color: var(--md-accent-fg-color);
+}
+
+.md-nav--secondary .md-nav__link:hover .headerlink {
+  opacity: 1;
+}
+
+/* Mejorar la jerarquía visual del TOC */
+.md-nav--secondary .md-nav__item--nested > .md-nav__link {
+  font-weight: 500;
+  color: var(--md-primary-fg-color);
+}
+
+/* Ajustes para modo oscuro */
+[data-md-color-scheme="slate"] .md-sidebar--secondary {
+  background: var(--md-default-bg-color);
+  border-left-color: var(--md-primary-fg-color);
+}
+
+/* Responsive: Ocultar TOC en pantallas pequeñas */
+@media screen and (max-width: 1220px) {
+  .md-sidebar--secondary {
+    display: none;
+  }
+}
+
+/* Añadir un título al TOC */
+.md-sidebar--secondary::before {
+  content: "📑 En esta página";
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--md-primary-fg-color);
+  padding: 0 0.5rem 0.5rem;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  margin-bottom: 0.5rem;
+}
+
+/* Animación suave al hacer scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mejorar la legibilidad del contenido principal */
+.md-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Estilo para los encabezados con permalink */
+.md-content h1,
+.md-content h2,
+.md-content h3 {
+  position: relative;
+}
+
+.md-content h1 .headerlink,
+.md-content h2 .headerlink,
+.md-content h3 .headerlink {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  margin-left: 0.5rem;
+  color: var(--md-accent-fg-color);
+  font-size: 0.8em;
+}
+
+.md-content h1:hover .headerlink,
+.md-content h2:hover .headerlink,
+.md-content h3:hover .headerlink {
+  opacity: 1;
+}
+/* ===== REDUCCIÓN DEL MENÚ LATERAL ===== */
+
+/* Reducir tamaño de fuente general del sidebar */
+.md-sidebar {
+  font-size: 0.75rem; /* Antes: 0.93rem (por defecto) */
+}
+
+/* Reducir espaciado entre elementos del menú */
+.md-nav__link {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  line-height: 1.3;
+}
+
+/* Reducir tamaño de los títulos de sección (capítulos) */
+.md-nav__item--nested > .md-nav__link {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Reducir tamaño de los elementos hijos (subcapítulos) */
+.md-nav__item .md-nav__item > .md-nav__link {
+  font-size: 0.72rem;
+}
+
+/* Reducir el padding izquierdo de los submenús */
+.md-nav--secondary .md-nav__item,
+.md-nav--primary .md-nav__item .md-nav__item {
+  padding-left: 0.3rem;
+  margin-left: 0;
+}
+
+/* Hacer que el título del sitio sea más compacto */
+.md-header__topic {
+  font-size: 0.9rem;
+}

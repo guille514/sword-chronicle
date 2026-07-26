@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoja de Personaje - Sword Chronicle</title>
+
+<!-- Librerías externas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+  :root {
+    --primary: #3f51b5;
+    --primary-dark: #303f9f;
+    --accent: #ffc107;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-light: #757575;
+    --border: #e0e0e0;
+    --success: #4caf50;
+    --danger: #f44336;
+    --warning: #ff9800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  header h1 { font-size: 2em; margin-bottom: 8px; }
+  header p { opacity: 0.9; font-size: 1.05em; }
+
+  .toolbar {
+    background: var(--card);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-success { background: var(--success); color: white; }
+  .btn-warning { background: var(--warning); color: white; }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-accent { background: var(--accent); color: #333; }
+
+  .section {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .section h2 {
+    color: var(--primary);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+  }
+
+  .field { display: flex; flex-direction: column; }
+  .field label {
+    font-size: 0.85em;
+    color: var(--text-light);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .field input, .field select, .field textarea {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+  }
+
+  .field textarea { resize: vertical; min-height: 60px; }
+
+  .stat-box {
+    background: linear-gradient(135deg, #f5f7ff, #e8ebff);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 4px solid var(--primary);
+  }
+
+  .stat-box .label { font-size: 0.8em; color: var(--text-light); text-transform: uppercase; }
+  .stat-box .value { font-size: 1.8em; font-weight: bold; color: var(--primary); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: #f5f5f5; color: var(--text-light); font-size: 0.85em; text-transform: uppercase; }
+  td input { width: 100%; padding: 6px; border: 1px solid transparent; border-radius: 4px; }
+  td input:focus { border-color: var(--primary); outline: none; background: #f9f9ff; }
+
+  .add-btn {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    margin-top: 8px;
+  }
+
+  .remove-btn {
+    background: var(--danger);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+  }
+
+  .auto-save-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--success);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .auto-save-indicator.show { opacity: 1; }
+
+  .hidden-input { display: none; }
+
+  @media print {
+    .toolbar, .add-btn, .remove-btn, .auto-save-indicator { display: none !important; }
+    body { background: white; }
+    .section { box-shadow: none; border: 1px solid #ddd; }
+  }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.5em; }
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* Botón de volver destacado */
+.toolbar .btn:first-child {
+  margin-right: auto;  /* Empuja el botón al lado izquierdo */
+  background: #5c6bc0;
+}
+
+.toolbar .btn:first-child:hover {
+  background: #3f51b5;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <h1>⚔️ Hoja de Personaje</h1>
+  <p>Sword Chronicle · Feudal Fantasy Roleplaying</p>
+</header>
+
+<div class="toolbar">
+  <button class="btn btn-primary" onclick="volverAlManual()">⬅️ Volver al Manual</button>
+  <button class="btn btn-success" onclick="guardarDatos()">💾 Guardar</button>
+  <button class="btn btn-primary" onclick="exportarPDF()">📄 Exportar PDF</button>
+  <button class="btn btn-accent" onclick="exportarJSON()">📥 Exportar JSON</button>
+  <button class="btn btn-warning" onclick="document.getElementById('importFile').click()">📂 Importar JSON</button>
+  <input type="file" id="importFile" class="hidden-input" accept=".json" onchange="importarJSON(event)">
+  <button class="btn btn-danger" onclick="limpiarTodo()">🗑️ Limpiar</button>
+</div>
+
+<!-- SECCIÓN 1: INFORMACIÓN BÁSICA -->
+<div class="section">
+  <h2>📋 Información Básica</h2>
+  <div class="grid">
+    <div class="field"><label>Nombre</label><input type="text" id="nombre" data-save></div>
+    <div class="field"><label>Casa</label><input type="text" id="casa" data-save></div>
+    <div class="field">
+      <label>Ancestro</label>
+      <select id="ancestro" data-save>
+        <option value="">-- Seleccionar --</option>
+        <option value="Humano">Humano</option>
+        <option value="Enano">Enano</option>
+        <option value="Elfo">Elfo</option>
+        <option value="Ogro">Ogro</option>
+        <option value="Mixto">Mixto</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Edad</label>
+      <select id="edad" data-save>
+        <option value="">-- Seleccionar --</option>
+        <option value="Juventud">Juventud (0-9)</option>
+        <option value="Adolescencia">Adolescencia (10-13)</option>
+        <option value="Adulto Joven">Adulto Joven (14-18)</option>
+        <option value="Adulto">Adulto (19-30)</option>
+        <option value="Edad Media">Edad Media (31-50)</option>
+        <option value="Vejez">Vejez (51-70)</option>
+        <option value="Muy Viejo">Muy Viejo (71-80)</option>
+        <option value="Venerable">Venerable (81+)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Rol</label>
+      <select id="rol" data-save>
+        <option value="">-- Seleccionar --</option>
+        <option value="Experto">Experto</option>
+        <option value="Luchador">Luchador</option>
+        <option value="Líder">Líder</option>
+        <option value="Pícaro">Pícaro</option>
+        <option value="Conspirador">Conspirador</option>
+        <option value="Hechicero">Hechicero</option>
+      </select>
+    </div>
+    <div class="field"><label>Estatus (1-10)</label><input type="number" id="estatus" min="0" max="10" value="2" data-save></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 2: HABILIDADES -->
+<div class="section">
+  <h2>🎯 Habilidades</h2>
+  <p style="color: var(--text-light); font-size: 0.9em; margin-bottom: 10px;">Rango base: 2. Ajusta según tu experiencia.</p>
+  <div class="grid">
+    <div class="field"><label>Agilidad</label><input type="number" class="habilidad" data-hab="agilidad" min="0" max="10" value="2"></div>
+    <div class="field"><label>Manejo de Animales</label><input type="number" class="habilidad" data-hab="animales" min="0" max="10" value="2"></div>
+    <div class="field"><label>Atletismo</label><input type="number" class="habilidad" data-hab="atletismo" min="0" max="10" value="2"></div>
+    <div class="field"><label>Alerta</label><input type="number" class="habilidad" data-hab="alerta" min="0" max="10" value="2"></div>
+    <div class="field"><label>Astucia</label><input type="number" class="habilidad" data-hab="astucia" min="0" max="10" value="2"></div>
+    <div class="field"><label>Engaño</label><input type="number" class="habilidad" data-hab="engano" min="0" max="10" value="2"></div>
+    <div class="field"><label>Resistencia</label><input type="number" class="habilidad" data-hab="resistencia" min="0" max="10" value="2"></div>
+    <div class="field"><label>Lucha</label><input type="number" class="habilidad" data-hab="lucha" min="0" max="10" value="2"></div>
+    <div class="field"><label>Curación</label><input type="number" class="habilidad" data-hab="curacion" min="0" max="10" value="2"></div>
+    <div class="field"><label>Conocimiento</label><input type="number" class="habilidad" data-hab="conocimiento" min="0" max="10" value="2"></div>
+    <div class="field"><label>Idioma</label><input type="number" class="habilidad" data-hab="idioma" min="0" max="10" value="2"></div>
+    <div class="field"><label>Puntería</label><input type="number" class="habilidad" data-hab="punteria" min="0" max="10" value="2"></div>
+    <div class="field"><label>Persuasión</label><input type="number" class="habilidad" data-hab="persuasion" min="0" max="10" value="2"></div>
+    <div class="field"><label>Estatus</label><input type="number" class="habilidad" data-hab="estatusHab" min="0" max="10" value="2"></div>
+    <div class="field"><label>Sigilo</label><input type="number" class="habilidad" data-hab="sigilo" min="0" max="10" value="2"></div>
+    <div class="field"><label>Supervivencia</label><input type="number" class="habilidad" data-hab="supervivencia" min="0" max="10" value="2"></div>
+    <div class="field"><label>Robo</label><input type="number" class="habilidad" data-hab="robo" min="0" max="10" value="2"></div>
+    <div class="field"><label>Guerra</label><input type="number" class="habilidad" data-hab="guerra" min="0" max="10" value="2"></div>
+    <div class="field"><label>Voluntad</label><input type="number" class="habilidad" data-hab="voluntad" min="0" max="10" value="2"></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 3: ESPECIALIDADES -->
+<div class="section">
+  <h2>✨ Especialidades</h2>
+  <table id="tablaEspecialidades">
+    <thead><tr><th>Habilidad</th><th>Especialidad</th><th>Bono (B)</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <button class="add-btn" onclick="agregarEspecialidad()">+ Añadir Especialidad</button>
+</div>
+
+<!-- SECCIÓN 4: ESTADÍSTICAS DERIVADAS -->
+<div class="section">
+  <h2>📊 Estadísticas Derivadas</h2>
+  <p style="color: var(--text-light); font-size: 0.9em; margin-bottom: 15px;">Calculadas automáticamente según tus habilidades.</p>
+  <div class="grid">
+    <div class="stat-box"><div class="label">Defensa de Combate</div><div class="value" id="defCombate">0</div></div>
+    <div class="stat-box"><div class="label">Defensa de Intriga</div><div class="value" id="defIntriga">0</div></div>
+    <div class="stat-box"><div class="label">Defensa de Hechicería</div><div class="value" id="defHechiceria">0</div></div>
+    <div class="stat-box"><div class="label">Salud</div><div class="value" id="salud">0</div></div>
+    <div class="stat-box"><div class="label">Compostura</div><div class="value" id="compostura">0</div></div>
+    <div class="stat-box"><div class="label">Movimiento</div><div class="value" id="movimiento">4 yd</div></div>
+  </div>
+  <div class="grid" style="margin-top: 15px;">
+    <div class="field"><label>Bono Defensivo (escudos/parada)</label><input type="number" id="bonoDefensivo" value="0" min="0" data-save></div>
+    <div class="field"><label>RA (Armadura)</label><input type="number" id="ra" value="0" min="0" data-save></div>
+    <div class="field"><label>Penalización de Armadura</label><input type="number" id="penalizacionArmadura" value="0" data-save></div>
+    <div class="field"><label>Volumen</label><input type="number" id="volumen" value="0" min="0" data-save></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 5: DESTINO Y CUALIDADES -->
+<div class="section">
+  <h2>🌟 Destino y Cualidades</h2>
+  <div class="grid">
+    <div class="field"><label>Puntos de Destino (actuales / máx)</label><input type="text" id="destino" placeholder="Ej: 4/4" data-save></div>
+    <div class="field"><label>Puntos de Hechicería</label><input type="number" id="puntosHechiceria" value="0" min="0" data-save></div>
+  </div>
+  <div class="field" style="margin-top: 15px;">
+    <label>Beneficios</label>
+    <textarea id="beneficios" placeholder="Ej: Atractivo, Lucky, Favored by Nobles..." data-save></textarea>
+  </div>
+  <div class="field" style="margin-top: 10px;">
+    <label>Defectos</label>
+    <textarea id="defectos" placeholder="Ej: Nemesis, Cobarde..." data-save></textarea>
+  </div>
+</div>
+
+<!-- SECCIÓN 6: COMBATE -->
+<div class="section">
+  <h2>⚔️ Combate</h2>
+  <table id="tablaArmas">
+    <thead><tr><th>Arma</th><th>Especialidad</th><th>Daño Base</th><th>Cualidades</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <button class="add-btn" onclick="agregarArma()">+ Añadir Arma</button>
+
+  <div class="grid" style="margin-top: 20px;">
+    <div class="field"><label>Lesiones (0 / máx)</label><input type="text" id="lesiones" placeholder="0 / 2" data-save></div>
+    <div class="field"><label>Heridas (0 / máx)</label><input type="text" id="heridas" placeholder="0 / 2" data-save></div>
+    <div class="field"><label>Daño actual</label><input type="number" id="danoActual" value="0" data-save></div>
+    <div class="field"><label>Fatiga</label><input type="number" id="fatiga" value="0" min="0" data-save></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 7: INTRIGA -->
+<div class="section">
+  <h2>🎭 Intriga</h2>
+  <div class="grid">
+    <div class="field">
+      <label>Disposición habitual</label>
+      <select id="disposicion" data-save>
+        <option value="Afectuoso">Afectuoso (DR 1)</option>
+        <option value="Amistoso">Amistoso (DR 2)</option>
+        <option value="Amable">Amable (DR 3)</option>
+        <option value="Indiferente" selected>Indiferente (DR 4)</option>
+        <option value="Desagrado">Desagrado (DR 5)</option>
+        <option value="Hostil">Hostil (DR 6)</option>
+        <option value="Malicioso">Malicioso (DR 7)</option>
+      </select>
+    </div>
+    <div class="field"><label>Técnicas favoritas</label><input type="text" id="tecnicas" placeholder="Ej: Convencer, Seducir..." data-save></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 8: HECHICERÍA -->
+<div class="section">
+  <h2>🔮 Hechicería</h2>
+  <div class="grid">
+    <div class="field"><label>Tradición</label><input type="text" id="tradicion" placeholder="Ej: Astrología, Brujería..." data-save></div>
+    <div class="field"><label>Artes conocidas</label><input type="text" id="artes" placeholder="Ej: Bendición, Adivinación..." data-save></div>
+  </div>
+  <div class="field" style="margin-top: 10px;">
+    <label>Obras conocidas</label>
+    <textarea id="obras" placeholder="Lista de Obras mágicas que conoces..." data-save></textarea>
+  </div>
+</div>
+
+<!-- SECCIÓN 9: EQUIPO -->
+<div class="section">
+  <h2>🎒 Equipo</h2>
+  <div class="grid">
+    <div class="field"><label>Monedas de Oro (GP)</label><input type="number" id="oro" value="0" min="0" data-save></div>
+    <div class="field"><label>Dracmas de Plata (SD)</label><input type="number" id="plata" value="0" min="0" data-save></div>
+    <div class="field"><label>Peniques de Cobre (CP)</label><input type="number" id="cobre" value="0" min="0" data-save></div>
+  </div>
+  <div class="field" style="margin-top: 10px;">
+    <label>Equipo y posesiones</label>
+    <textarea id="equipo" placeholder="Armadura, herramientas, objetos especiales..." data-save></textarea>
+  </div>
+</div>
+
+<!-- SECCIÓN 10: TRASFONDO -->
+<div class="section">
+  <h2>📖 Trasfondo</h2>
+  <div class="grid">
+    <div class="field"><label>Lugar de nacimiento</label><input type="text" id="nacimiento" data-save></div>
+    <div class="field"><label>Padres</label><input type="text" id="padres" data-save></div>
+    <div class="field"><label>Hermanos</label><input type="text" id="hermanos" data-save></div>
+    <div class="field"><label>Lema de la casa</label><input type="text" id="lema" data-save></div>
+  </div>
+  <div class="field" style="margin-top: 10px;">
+    <label>🎯 Objetivo</label>
+    <textarea id="objetivo" placeholder="¿Qué quiere tu personaje?" data-save></textarea>
+  </div>
+  <div class="field" style="margin-top: 10px;">
+    <label>💭 Motivación</label>
+    <textarea id="motivacion" placeholder="¿Por qué lo quiere?" data-save></textarea>
+  </div>
+  <div class="grid" style="margin-top: 10px;">
+    <div class="field"><label>😇 Virtud</label><input type="text" id="virtud" data-save></div>
+    <div class="field"><label>😈 Vicio</label><input type="text" id="vicio" data-save></div>
+  </div>
+  <div class="field" style="margin-top: 10px;">
+    <label>📜 Historia personal</label>
+    <textarea id="historia" placeholder="Eventos importantes del pasado..." data-save style="min-height: 100px;"></textarea>
+  </div>
+</div>
+
+</div>
+
+<div class="auto-save-indicator" id="autoSaveIndicator">✓ Guardado automáticamente</div>
+
+<script>
+// ====== CONFIGURACIÓN ======
+const STORAGE_KEY = 'swordChronicleHoja';
+
+// ====== GUARDADO AUTOMÁTICO ======
+let autoSaveTimeout;
+function marcarCambio() {
+  clearTimeout(autoSaveTimeout);
+  autoSaveTimeout = setTimeout(guardarDatos, 800);
+}
+
+function guardarDatos() {
+  const datos = {};
+  // Campos simples
+  document.querySelectorAll('[data-save]').forEach(el => {
+    datos[el.id] = el.value;
+  });
+  // Habilidades
+  document.querySelectorAll('.habilidad').forEach(el => {
+    datos['hab_' + el.dataset.hab] = el.value;
+  });
+  // Tablas dinámicas
+  datos.especialidades = obtenerFilasTabla('tablaEspecialidades');
+  datos.armas = obtenerFilasTabla('tablaArmas');
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+  mostrarIndicador();
+}
+
+function obtenerFilasTabla(id) {
+  const filas = [];
+  document.querySelectorAll(`#${id} tbody tr`).forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    filas.push(Array.from(inputs).map(i => i.value));
+  });
+  return filas;
+}
+
+function mostrarIndicador() {
+  const ind = document.getElementById('autoSaveIndicator');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 1500);
+}
+
+// ====== CARGA DE DATOS ======
+function cargarDatos() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) {
+    agregarEspecialidad();
+    agregarArma();
+    calcularEstadisticas();
+    return;
+  }
+  const datos = JSON.parse(raw);
+
+  // Campos simples
+  Object.keys(datos).forEach(key => {
+    if (key === 'especialidades' || key === 'armas') return;
+    if (key.startsWith('hab_')) {
+      const hab = key.replace('hab_', '');
+      const el = document.querySelector(`[data-hab="${hab}"]`);
+      if (el) el.value = datos[key];
+    } else {
+      const el = document.getElementById(key);
+      if (el) el.value = datos[key];
+    }
+  });
+
+  // Tablas dinámicas
+  if (datos.especialidades && datos.especialidades.length) {
+    datos.especialidades.forEach(fila => agregarEspecialidad(fila));
+  } else {
+    agregarEspecialidad();
+  }
+  if (datos.armas && datos.armas.length) {
+    datos.armas.forEach(fila => agregarArma(fila));
+  } else {
+    agregarArma();
+  }
+
+  calcularEstadisticas();
+}
+
+// ====== TABLAS DINÁMICAS ======
+function agregarEspecialidad(valores = null) {
+  const tbody = document.querySelector('#tablaEspecialidades tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" placeholder="Ej: Lucha" value="${valores?.[0] || ''}"></td>
+    <td><input type="text" placeholder="Ej: Espadas Largas" value="${valores?.[1] || ''}"></td>
+    <td><input type="number" min="0" max="10" value="${valores?.[2] || '1'}"></td>
+    <td><button class="remove-btn" onclick="this.closest('tr').remove(); marcarCambio();">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+  tr.querySelectorAll('input').forEach(i => i.addEventListener('input', marcarCambio));
+  marcarCambio();
+}
+
+function agregarArma(valores = null) {
+  const tbody = document.querySelector('#tablaArmas tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" placeholder="Ej: Espada larga" value="${valores?.[0] || ''}"></td>
+    <td><input type="text" placeholder="Ej: Hojas Largas" value="${valores?.[1] || ''}"></td>
+    <td><input type="text" placeholder="Ej: Atletismo+1" value="${valores?.[2] || ''}"></td>
+    <td><input type="text" placeholder="Ej: Adaptable" value="${valores?.[3] || ''}"></td>
+    <td><button class="remove-btn" onclick="this.closest('tr').remove(); marcarCambio();">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+  tr.querySelectorAll('input').forEach(i => i.addEventListener('input', marcarCambio));
+  marcarCambio();
+}
+
+// ====== CÁLCULO AUTOMÁTICO ======
+function getHab(id) {
+  const el = document.querySelector(`[data-hab="${id}"]`);
+  return parseInt(el?.value) || 0;
+}
+
+function calcularEstadisticas() {
+  const agilidad = getHab('agilidad');
+  const atletismo = getHab('atletismo');
+  const alerta = getHab('alerta');
+  const astucia = getHab('astucia');
+  const resistencia = getHab('resistencia');
+  const voluntad = getHab('voluntad');
+  const estatusHab = getHab('estatusHab');
+  const bonoDef = parseInt(document.getElementById('bonoDefensivo').value) || 0;
+  const volumen = parseInt(document.getElementById('volumen').value) || 0;
+
+  // Defensa de Combate = Agilidad + Atletismo + Alerta + Bono Defensivo
+  document.getElementById('defCombate').textContent = agilidad + atletismo + alerta + bonoDef;
+
+  // Defensa de Intriga = Alerta + Astucia + Estatus
+  document.getElementById('defIntriga').textContent = alerta + astucia + estatusHab;
+
+  // Defensa de Hechicería = Astucia + Resistencia + Voluntad
+  document.getElementById('defHechiceria').textContent = astucia + resistencia + voluntad;
+
+  // Salud = 3 × Resistencia
+  document.getElementById('salud').textContent = 3 * resistencia;
+
+  // Compostura = 3 × Voluntad
+  document.getElementById('compostura').textContent = 3 * voluntad;
+
+  // Movimiento = 4 - (Volumen/2)
+  const mov = Math.max(1, 4 - Math.floor(volumen / 2));
+  document.getElementById('movimiento').textContent = mov + ' yd';
+}
+
+// ====== EXPORTAR PDF ======
+function exportarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const nombre = document.getElementById('nombre').value || 'Personaje';
+  const casa = document.getElementById('casa').value || '';
+
+  doc.setFontSize(18);
+  doc.setTextColor(63, 81, 181);
+  doc.text('⚔ Hoja de Personaje - Sword Chronicle', 14, 20);
+
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  let y = 30;
+
+  doc.text(`Nombre: ${nombre}`, 14, y); y += 6;
+  doc.text(`Casa: ${casa}`, 14, y); y += 6;
+  doc.text(`Ancestro: ${document.getElementById('ancestro').value}`, 14, y);
+  doc.text(`Edad: ${document.getElementById('edad').value}`, 110, y); y += 6;
+  doc.text(`Rol: ${document.getElementById('rol').value}`, 14, y);
+  doc.text(`Estatus: ${document.getElementById('estatus').value}`, 110, y); y += 10;
+
+  doc.setFontSize(14);
+  doc.setTextColor(63, 81, 181);
+  doc.text('Estadísticas', 14, y); y += 6;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Defensa de Combate: ${document.getElementById('defCombate').textContent}`, 14, y);
+  doc.text(`Defensa de Intriga: ${document.getElementById('defIntriga').textContent}`, 110, y); y += 5;
+  doc.text(`Defensa de Hechicería: ${document.getElementById('defHechiceria').textContent}`, 14, y);
+  doc.text(`Salud: ${document.getElementById('salud').textContent}`, 110, y); y += 5;
+  doc.text(`Compostura: ${document.getElementById('compostura').textContent}`, 14, y);
+  doc.text(`Movimiento: ${document.getElementById('movimiento').textContent}`, 110, y); y += 10;
+
+  doc.setFontSize(14);
+  doc.setTextColor(63, 81, 181);
+  doc.text('Habilidades', 14, y); y += 6;
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  const habilidades = document.querySelectorAll('.habilidad');
+  let col = 0;
+  habilidades.forEach(h => {
+    const labels = {
+      'agilidad': 'Agilidad', 'animales': 'Animales', 'atletismo': 'Atletismo',
+      'alerta': 'Alerta', 'astucia': 'Astucia', 'engano': 'Engaño',
+      'resistencia': 'Resistencia', 'lucha': 'Lucha', 'curacion': 'Curación',
+      'conocimiento': 'Conocimiento', 'idioma': 'Idioma', 'punteria': 'Puntería',
+      'persuasion': 'Persuasión', 'estatusHab': 'Estatus', 'sigilo': 'Sigilo',
+      'supervivencia': 'Supervivencia', 'robo': 'Robo', 'guerra': 'Guerra',
+      'voluntad': 'Voluntad'
+    };
+    const nombreHab = labels[h.dataset.hab] || h.dataset.hab;
+    const x = col < 10 ? 14 : 110;
+    const yActual = y + (col % 10) * 5;
+    doc.text(`${nombreHab}: ${h.value}`, x, yActual);
+    col++;
+    if (col === 10) y += 50;
+  });
+  y += 55;
+
+  doc.setFontSize(14);
+  doc.setTextColor(63, 81, 181);
+  doc.text('Especialidades', 14, y); y += 6;
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  document.querySelectorAll('#tablaEspecialidades tbody tr').forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    const txt = `${inputs[0].value} (${inputs[1].value}): ${inputs[2].value}B`;
+    if (inputs[0].value || inputs[1].value) {
+      doc.text(txt, 14, y);
+      y += 5;
+    }
+  });
+  y += 5;
+
+  doc.setFontSize(14);
+  doc.setTextColor(63, 81, 181);
+  doc.text('Beneficios y Defectos', 14, y); y += 6;
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  const beneficios = document.getElementById('beneficios').value;
+  const defectos = document.getElementById('defectos').value;
+  if (beneficios) { doc.text(`Beneficios: ${beneficios}`, 14, y); y += 5; }
+  if (defectos) { doc.text(`Defectos: ${defectos}`, 14, y); y += 5; }
+
+  doc.save(`personaje_${nombre.replace(/\s+/g, '_')}.pdf`);
+}
+
+// ====== EXPORTAR / IMPORTAR JSON ======
+function exportarJSON() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) { alert('No hay datos para exportar.'); return; }
+  const blob = new Blob([raw], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const nombre = document.getElementById('nombre').value || 'personaje';
+  a.href = url;
+  a.download = `${nombre.replace(/\s+/g, '_')}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importarJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const datos = JSON.parse(e.target.result);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+      cargarDatos();
+      alert('✓ Datos importados correctamente.');
+    } catch (err) {
+      alert('✕ Error al leer el archivo JSON.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ====== VOLVER AL MANUAL (CON CONFIRMACIÓN) ======
+function volverAlManual() {
+  // Guardar automáticamente antes de salir
+  guardarDatos();
+  
+  // Preguntar al usuario
+  const confirmado = confirm('¿Volver al manual? Tus datos se han guardado automáticamente.');
+  if (confirmado) {
+    if (document.referrer && document.referrer.includes(window.location.hostname)) {
+      window.history.back();
+    } else {
+      window.location.href = './';
+    }
+  }
+}
+
+// ====== LIMPIAR TODO ======
+function limpiarTodo() {
+  if (!confirm('¿Seguro que quieres borrar toda la hoja? Esta acción no se puede deshacer.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ====== EVENTOS ======
+document.addEventListener('DOMContentLoaded', () => {
+  cargarDatos();
+
+  // Listeners para recalcular estadísticas
+  document.querySelectorAll('.habilidad, #bonoDefensivo, #volumen').forEach(el => {
+    el.addEventListener('input', () => { calcularEstadisticas(); marcarCambio(); });
+  });
+
+  // Listeners para guardado automático en campos simples
+  document.querySelectorAll('[data-save]').forEach(el => {
+    el.addEventListener('input', marcarCambio);
+    el.addEventListener('change', marcarCambio);
+  });
+});
+</script>
+
+</body>
+</html>

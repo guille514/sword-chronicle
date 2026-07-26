@@ -21,23 +21,59 @@ theme:
   features:
     - navigation.sections
     - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - toc.follow
+    - toc.integrate
     - search.suggest
     - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
 
 markdown_extensions:
+  - abbr
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;'
+      lang:
+        - es
+        - en
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
   - Inicio: index.md
+  - 📝 Hoja de Personaje: hoja-personaje.html
+  - ⚡ Referencia Rápida: referencia.md
+  - 🔍 Búsqueda Avanzada: busqueda.html   # ← NUEVA LÍNEA
+  - 🧮 Calculadoras: calculadoras.html   # ← NUEVA LÍNEA
+  - 👥 Generador de PNJs: generador-pnjs.html   # ← NUEVA LÍNEA
   - Reglas del Juego:
     - El Sistema: reglas/sistema.md
     - Pruebas y Dificultad: reglas/pruebas.md
     - Glosario: reglas/glosario.md
   - Creación de Personajes:
     - Introducción y Concepto: creacion/introduccion.md
-    - Habilidades y Estadísticas: creacion/asignar-stats.md
+    - Habilidades y Especialidades: creacion/habilidades.md
     - Destino y Defectos: creacion/destino-y-defectos.md
     - Posesiones y Estadísticas: creacion/posesiones-y-estadisticas.md
     - Recompensas y Resumen: creacion/recompensas.md

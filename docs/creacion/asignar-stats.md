@@ -1,0 +1,112 @@
+# 📊 Asignar Habilidades y Estadísticas
+
+Con una idea clara de tu personaje en mente, estás listo para mejorar tus habilidades y definir tus estadísticas.
+
+---
+
+## 🎯 Paso 3: Asignar Habilidades
+
+Todos los personajes comienzan con **rango 2** en cada habilidad. Usando la Experiencia inicial determinada por tu edad, puedes mejorar una habilidad comprando rangos adicionales.
+
+!!! warning "⚠️ Importante"
+    **Debes comprar tu rango de Estatus primero.**
+
+### 📈 Experiencia Inicial por Edad
+
+| Edad | Experiencia | Rango Máximo (Excepto Estatus) |
+|:-----|:-----------:|:------------------------------:|
+| 👶 Juventud | 120 | 4 |
+| 🧒 Adolescencia | 150 | 4 |
+| 🧑 Adulto Joven | 180 | 5 |
+| 👨 Adulto | 210 | 7 |
+| 🧓 Edad Media | 240 | 6 |
+| 👴 Vejez | 270 | 5 |
+| 🧓 Muy Viejo | 330 | 5 |
+| 👵 Venerable | 360 | 5 |
+
+### 💰 Coste de Mejora de Habilidades
+
+| Rango | Nueva Habilidad | Experiencia |
+|:-----:|:---------------:|:-----------:|
+| -1 | 1 | +50 Exp. *(reducir habilidad)* |
+| +1 | 3 (o 1 para Idioma) | 10 |
+| +2 | 4 (o 2) | 40 |
+| +3 | 5 (o 3) | 70 |
+| +4 | 6 (o 4) | 100 |
+| +5 | 7 (o 5) | 130 |
+
+!!! tip "💡 Consejo"
+    ¡Resiste la tentación de maximizar una habilidad! Para un adulto, una habilidad de 6 cuesta casi la mitad de tu experiencia.
+
+---
+
+## 🎯 Paso 4: Asignar Especialidades
+
+Las especialidades son áreas de experiencia dentro de una habilidad que otorgan **dados de bonificación**. Cada dado de bonificación cuesta **10 Exp**.
+
+| Edad | Experiencia para Especialidades |
+|:-----|:-------------------------------:|
+| 👶 Juventud | 40 |
+| 🧒 Adolescencia | 40 |
+| 🧑 Adulto Joven | 60 |
+| 👨 Adulto | 80 |
+| 🧓 Edad Media | 100 |
+| 👴 Vejez | 160 |
+| 🧓 Muy Viejo | 200 |
+| 👵 Venerable | 240 |
+
+---
+
+## ✨ Paso 5: Puntos de Destino y Beneficios
+
+Los Puntos de Destino representan el potencial de tu personaje. Empiezas con un número determinado por tu edad. Puedes invertir Puntos de Destino en **Beneficios**.
+
+| Edad | Puntos de Destino | Máx. Beneficios |
+|:-----|:-----------------:|:---------------:|
+| 👶 Juventud | 7 | 2 + ancestro |
+| 🧑 Adulto Joven | 5 | 2 + ancestro |
+| 👨 Adulto | 4 | 2 + ancestro |
+| 🧓 Edad Media | 3 | 2 + ancestro |
+| 👴 Vejez | 2 | 1 + ancestro |
+| 🧓 Muy Viejo | 1 | 1 + ancestro |
+| 👵 Venerable | 0 | 0 + ancestro |
+
+---
+
+## ⚠️ Paso 6: Defectos
+
+Debes tomar los defectos según tu edad (ver tabla en el manual).
+- **Fallo:** Impone -1D a una habilidad.
+- **Defecto:** Impone desafíos más amplios.
+
+---
+
+## 💰 Paso 7: Posesiones Iniciales
+
+Todos los personajes comienzan con: ropa común, botas/zapatos y una daga. Los **herederos** también comienzan con un **anillo de sello**.
+Haz una **prueba de Estatus**. El resultado es con cuántas **piezas de oro** comienzas. Debes gastar al menos la mitad de tu moneda inicial.
+
+---
+
+## 📊 Paso 8: Estadísticas Derivadas
+
+Rellena las estadísticas derivadas en tu hoja de personaje:
+
+### 🎭 Estadísticas de Intriga
+| Estadística | Fórmula |
+|:------------|:--------|
+| **Defensa de Intriga** | Alerta + Astucia + Estatus |
+| **Compostura** | 3 × Voluntad |
+
+### ⚔️ Estadísticas de Combate
+| Estadística | Fórmula |
+|:------------|:--------|
+| **Defensa de Combate** | Agilidad + Atletismo + Alerta + Bonus Defensivo |
+| **Salud** | 3 × Resistencia |
+| **Armadura (RA)** | Basada en la armadura equipada |
+| **Daño** | Basado en el arma equipada |
+
+---
+
+## 🎉 Paso 9: ¡A Jugar!
+Rellena el resto de la hoja: nombre, lugar de nacimiento, padres, hermanos, escudo de armas y lema. ¡Una vez llena, estás listo para jugar!

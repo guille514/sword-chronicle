@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de PNJs - Sword Chronicle</title>
+<style>
+:root {
+  --primary: #3f51b5;
+  --primary-dark: #303f9f;
+  --accent: #ffc107;
+  --bg: #fafafa;
+  --card: #ffffff;
+  --text: #212121;
+  --text-light: #757575;
+  --border: #e0e0e0;
+  --success: #4caf50;
+  --info: #2196f3;
+  --warning: #ff9800;
+  --danger: #f44336;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 20px;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+header h1 { font-size: 2em; margin-bottom: 8px; }
+header p { opacity: 0.9; font-size: 1.05em; }
+.toolbar {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.btn-primary { background: var(--primary); color: white; }
+.btn-accent { background: var(--accent); color: #333; }
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: var(--card);
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.tab {
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s;
+  color: var(--text-light);
+}
+.tab:hover { background: #f0f0f0; color: var(--text); }
+.tab.active { background: var(--primary); color: white; }
+.panel {
+  background: var(--card);
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  display: none;
+}
+.panel.active { display: block; }
+.panel h2 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-size: 1.4em;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 8px;
+}
+.description {
+  color: var(--text-light);
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #f5f7ff;
+  border-left: 4px solid var(--info);
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.field { display: flex; flex-direction: column; }
+.field label {
+  font-size: 0.85em;
+  color: var(--text-light);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.field input, .field select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.95em;
+  transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+}
+.generate-btn {
+  background: var(--success);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.05em;
+  font-weight: 600;
+  margin: 15px auto;
+  display: block;
+  transition: all 0.2s;
+}
+.generate-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.result-card {
+  background: linear-gradient(135deg, #f5f7ff, #e8ebff);
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  border-left: 4px solid var(--primary);
+}
+.result-card h3 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+.result-section { margin-bottom: 15px; }
+.result-section h4 {
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+  font-size: 1em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+.stat-pill {
+  background: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 0.9em;
+}
+.stat-pill strong { color: var(--primary); }
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+.preset-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.preset-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-color: var(--primary);
+}
+.preset-card h4 { color: var(--primary); margin-bottom: 8px; }
+.preset-card p { color: var(--text-light); font-size: 0.85em; margin-bottom: 8px; }
+.preset-stats {
+  font-size: 0.8em;
+  color: var(--text);
+  background: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+.trait-box {
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  header h1 { font-size: 1.5em; }
+  .form-grid { grid-template-columns: 1fr; }
+  .preset-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1e1e;
+    --card: #2d2d2d;
+    --text: #e0e0e0;
+    --text-light: #a0a0a0;
+    --border: #444;
+  }
+  .description { background: #1a1a2e; }
+  .result-card { background: #1a1a2e; }
+  .stat-pill, .preset-card, .trait-box { background: #1a1a1a; }
+  .preset-stats { background: #1a1a1a; }
+}
+@media print {
+  .toolbar, .tabs, .generate-btn, .btn { display: none !important; }
+  body { background: white; }
+  .panel { box-shadow: none; border: 1px solid #ddd; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>👥 Generador de PNJs</h1>
+  <p>Crea personajes no jugadores al instante para tu partida</p>
+</header>
+
+<div class="toolbar">
+  <button class="btn btn-primary" onclick="volverAlManual()">⬅️ Volver al Manual</button>
+  <button class="btn btn-accent" onclick="window.print()">🖨️ Imprimir</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-panel="generator" onclick="cambiarPanel('generator', this)">🎲 Generador</button>
+  <button class="tab" data-panel="presets" onclick="cambiarPanel('presets', this)">📋 Ejemplos</button>
+  <button class="tab" data-panel="creatures" onclick="cambiarPanel('creatures', this)">🐾 Criaturas</button>
+</div>
+
+<div id="generator" class="panel active">
+  <h2>🎲 Generador Aleatorio de PNJs</h2>
+  <div class="description">Selecciona el tipo de PNJ y genera uno al instante con habilidades, especialidades y estadísticas derivadas.</div>
+  <div class="form-grid">
+    <div class="field">
+      <label>Tipo de PNJ</label>
+      <select id="npcType">
+        <option value="tertiary">🟢 Terciario (minion, guardia, bandido)</option>
+        <option value="secondary">🟡 Secundario (teniente, sirviente importante)</option>
+        <option value="primary">🔴 Primario (archienemigo, mentor, aliado clave)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Nombre (opcional)</label>
+      <input type="text" id="npcName" placeholder="Dejar vacío para aleatorio">
+    </div>
+    <div class="field">
+      <label>Rol / Función</label>
+      <select id="npcRole">
+        <option value="random">🎲 Aleatorio</option>
+        <option value="guardia">Guardia / Soldado</option>
+        <option value="bandido">Bandido / Mercenario</option>
+        <option value="noble">Noble / Cortesano</option>
+        <option value="sabio">Sabio / Sacerdote</option>
+        <option value="asesino">Asesino / Espía</option>
+        <option value="caballero">Caballero / Guerrero</option>
+      </select>
+    </div>
+  </div>
+  <button class="generate-btn" onclick="generarPNJ()">✨ Generar PNJ</button>
+  <div id="resultContainer"></div>
+</div>
+
+<div id="presets" class="panel">
+  <h2>📋 Ejemplos de PNJs</h2>
+  <div class="description">PNJs listos para usar, extraídos del manual. Haz clic en cualquiera para ver sus estadísticas completas.</div>
+  <div class="preset-grid" id="presetGrid"></div>
+</div>
+
+<div id="creatures" class="panel">
+  <h2>🐾 Bestiario</h2>
+  <div class="description">Criaturas comunes y monturas con sus estadísticas completas.</div>
+  <div class="preset-grid" id="creatureGrid"></div>
+</div>
+
+</div>
+
+<script>
+var HABILIDADES = ['Agilidad','Manejo de Animales','Atletismo','Alerta','Astucia','Engaño','Resistencia','Lucha','Curación','Conocimiento','Idioma','Puntería','Persuasión','Estatus','Sigilo','Supervivencia','Robo','Guerra','Voluntad'];
+
+var ESPECIALIDADES = {
+  'Agilidad': ['Acrobacias','Equilibrio','Contorsiones','Esquivar','Rapidez'],
+  'Manejo de Animales': ['Calmar','Conducir','Montar','Entrenar'],
+  'Atletismo': ['Escalar','Saltar','Correr','Fuerza','Nadar','Lanzar'],
+  'Alerta': ['Empatía','Notar'],
+  'Astucia': ['Descifrar','Lógica','Memoria'],
+  'Engaño': ['Actuar','Farolear','Hacer Trampa','Disfrazarse'],
+  'Resistencia': ['Resiliencia','Aguante'],
+  'Lucha': ['Hachas','Contundentes','Pelea','Esgrima','Hojas Largas','Armas de Asta','Escudos','Hojas Cortas','Lanzas'],
+  'Curación': ['Diagnosticar','Tratar Dolencia','Tratar Herida'],
+  'Conocimiento': ['Educación','Investigación','Callejeo'],
+  'Idioma': ['Elocuencia','Alfabetización'],
+  'Puntería': ['Arcos','Ballestas','Asedio','Arrojadizas'],
+  'Persuasión': ['Regatear','Encantar','Convencer','Incitar','Intimidar','Seducir','Provocar'],
+  'Estatus': ['Linaje','Reputación','Administración','Torneos'],
+  'Sigilo': ['Mezclarse','Escabullirse'],
+  'Supervivencia': ['Recolectar','Cazar','Orientación','Rastrear'],
+  'Robo': ['Abrir Cerraduras','Prestidigitación','Hurtar'],
+  'Guerra': ['Mando','Estrategia','Tácticas'],
+  'Voluntad': ['Coordinar','Coraje','Dedicación']
+};
+
+var NOMBRES = ['Aldric','Bran','Cedric','Doran','Eldon','Finn','Gareth','Hal','Ivan','Joran','Kael','Loran','Maren','Nolan','Orin','Perrin','Quinn','Roran','Soren','Toran','Ulric','Varon','Warrick','Xander','Yorick','Zarek','Arya','Brienne','Daena','Elara','Fiora','Gwen','Helena','Isolde','Jeyne','Kira','Lyra','Mira','Nessa','Olenna','Petra','Quella','Rhea','Sera','Talia','Ursa','Vera','Willa','Yara'];
+
+var APELLIDOS = ['el Bravo','el Silencioso','el Astuto','el Sombrio','el Leal','el Cruel','el Viejo','el Joven','el Errante','el Rojo','Mano de Hierro','Ojo de Águila','Sin Miedo','el Sabio'];
+
+var RASGOS_FISICOS = ['Cicatriz en forma de Y en la mejilla','Ojos de color avellana penetrantes','Calvicie parcial con barba larga','Mano izquierda mutilada','Estatura inusualmente alta','Tatuaje de serpiente en el cuello','Cojera leve en la pierna derecha','Cabello prematuramente canoso','Nariz rota en múltiples ocasiones','Oreja izquierda cercenada','Marcas de viruela en el rostro','Manos grandes y callosas','Complexión delgada y ágil','Hombros anchos y pecho robusto','Postura encorvada y cautelosa'];
+
+var RASGOS_PERSONALIDAD = ['Habla en susurros conspiradores','Ríe fuerte sin motivo aparente','Desconfía de todo el mundo','Extremadamente cortés y formal','Tendencia a mentir compulsivamente','Lealtad inquebrantable a su señor','Codicia evidente por el oro','Temperamento volátil y violento','Sabiduría calmada y reflexiva','Arrogancia desmedida','Cobardía disfrazada de prudencia','Honor estricto y rígido','Crueldad sádica','Generosidad desinteresada','Supersticioso y temeroso'];
+
+var PNJS = {
+  'Asesino': {
+    desc: 'Killer a sueldo, peligroso en la sombra.',
+    hab: {'Agilidad':3,'Resistencia':3,'Lucha':4,'Sigilo':4},
+    esp: {'Lucha':['Hojas Cortas 1B'],'Sigilo':['Escabullirse 1B']},
+    stats: {'DC':8,'Salud':9},
+    eq: 'Estilete: 4D+1B, 3 daño, Perforante 2'
+  },
+  'Bandido': {
+    desc: 'Criminal común o bandido de caminos.',
+    hab: {'Lucha':3,'Sigilo':4,'Supervivencia':3},
+    esp: {'Lucha':['Hachas 1B'],'Sigilo':['Escabullirse 1B']},
+    stats: {'DC':6,'Salud':6},
+    eq: 'Hacha de batalla: 3D+1B, 2 daño'
+  },
+  'Cortesano': {
+    desc: 'Noblezuelo, fuente de chismes e intrigas.',
+    hab: {'Alerta':2,'Astucia':3,'Engaño':3,'Estatus':4},
+    esp: {'Alerta':['Empatía 1B'],'Engaño':['Farolear 1B']},
+    stats: {'DI':9,'Compostura':6},
+    eq: 'Ninguno destacado'
+  },
+  'Guardia': {
+    desc: 'Miembro de la guardia urbana o centinela.',
+    hab: {'Atletismo':4,'Alerta':3,'Resistencia':3,'Lucha':4},
+    esp: {'Alerta':['Notar 1B'],'Lucha':['Armas de Asta 1B']},
+    stats: {'DC':8,'Salud':9},
+    eq: 'Alabarda: 4D+1B, 7 daño, A dos manos'
+  },
+  'Caballero sin Tierras': {
+    desc: 'Vende su espada al mejor postor.',
+    hab: {'Manejo de Animales':3,'Atletismo':3,'Lucha':4},
+    esp: {'Lucha':['Hojas Largas 1B','Lanzas 1B']},
+    stats: {'DC':7,'Salud':6},
+    eq: 'Espada larga: 4D+1B, 4 daño'
+  },
+  'Caballero Veterano': {
+    desc: 'Experimentado, posiblemente juramentado.',
+    hab: {'Agilidad':3,'Manejo de Animales':3,'Atletismo':3,'Alerta':3,'Resistencia':4,'Lucha':5,'Estatus':4,'Guerra':3,'Voluntad':3},
+    esp: {'Manejo de Animales':['Montar 2B'],'Lucha':['Hojas Largas 2B','Escudos 1B','Lanzas 2B']},
+    stats: {'DC':9,'Salud':12},
+    eq: 'Espada larga: 5D+2B, 4 daño | Lanza: 5D+1B, 7 daño'
+  },
+  'Noble Menor': {
+    desc: 'Vástago de una casa menor con educación básica.',
+    hab: {'Lucha':3,'Conocimiento':2,'Estatus':3,'Voluntad':3},
+    esp: {'Lucha':['Hojas Largas 2B'],'Estatus':['Linaje 2B']},
+    stats: {'DC':6,'DI':7,'Compostura':9,'Salud':6},
+    eq: 'Espada larga: 3D+2B, 3 daño'
+  }
+};
+
+var CRIATURAS = {
+  'Oso': {
+    desc: 'Omnipresente en el norte. Madre protegiendo crías puede ser letal.',
+    hab: {'Agilidad':2,'Atletismo':4,'Alerta':3,'Resistencia':5,'Lucha':4,'Supervivencia':5},
+    esp: {'Atletismo':['Fuerza 4B'],'Alerta':['Notar 2B']},
+    stats: {'DC':9,'RA':2,'Salud':15,'Mov':'5 yd'},
+    eq: 'Garras: 4D, 5 daño, Agarre | Mordisco: 4D, 8 daño, Perforante 1, Vicioso'
+  },
+  'Jabalí': {
+    desc: 'Caza popular. Agresivo pero rara vez ataca sin provocación.',
+    hab: {'Agilidad':3,'Atletismo':3,'Alerta':3,'Resistencia':3,'Lucha':3,'Sigilo':3,'Supervivencia':4},
+    esp: {'Agilidad':['Rapidez 2B'],'Alerta':['Notar 2B']},
+    stats: {'DC':9,'RA':1,'Salud':9,'Mov':'6 yd'},
+    eq: 'Embestida: 3D, 4 daño, Poderoso, Vicioso'
+  },
+  'Lobo': {
+    desc: 'Evitan humanos, peligrosos si están hambrientos.',
+    hab: {'Agilidad':3,'Atletismo':3,'Alerta':3,'Resistencia':3,'Lucha':3,'Sigilo':4,'Supervivencia':4},
+    esp: {'Sigilo':['Escabullirse 1B'],'Supervivencia':['Rastrear 1B']},
+    stats: {'DC':9,'RA':0,'Salud':9,'Mov':'6 yd'},
+    eq: 'Mordisco: 3D, 3 daño | Derribo: 2+ grados = derriba al oponente'
+  },
+  'Sabueso': {
+    desc: 'Usados en guerra, caza y compañía.',
+    hab: {'Agilidad':3,'Atletismo':3,'Alerta':3,'Resistencia':3,'Lucha':3,'Supervivencia':3},
+    esp: {'Atletismo':['Saltar 2B','Correr 1B'],'Alerta':['Notar 2B'],'Supervivencia':['Rastrear 2B']},
+    stats: {'DC':9,'RA':0,'Salud':9,'Mov':'8 yd'},
+    eq: 'Mordisco: 3D, 3 daño'
+  },
+  'Águila': {
+    desc: 'Depredadoras de visión aguda. Algunas se usan en cetrería.',
+    hab: {'Agilidad':4,'Alerta':4,'Lucha':3,'Supervivencia':3},
+    esp: {'Agilidad':['Rapidez 2B'],'Alerta':['Notar 2B'],'Supervivencia':['Cazar 2B']},
+    stats: {'DC':10,'RA':0,'Salud':6,'Mov':'1 yd / Vuelo 8 yd'},
+    eq: 'Pico: 3D, 2 daño | Garras: 3D, 2 daño | Garras Cegadoras: 2+ grados = -2D al oponente'
+  },
+  'Destrier': {
+    desc: 'Caballo de guerra alto, fuerte y espléndido.',
+    hab: {'Agilidad':3,'Atletismo':5,'Alerta':3,'Resistencia':5,'Lucha':3,'Voluntad':4},
+    esp: {'Atletismo':['Correr 2B','Fuerza 2B'],'Alerta':['Notar 3B'],'Resistencia':['Aguante 4B']},
+    stats: {'DC':11,'RA':0,'Salud':15,'Mov':'6 yd'},
+    eq: 'Mordisco: 3D, 4 daño | Casco: 3D, 6 daño, Poderoso'
+  },
+  'Corcel': {
+    desc: 'Más ligero que el destrier pero aún fuerte y rápido.',
+    hab: {'Agilidad':4,'Atletismo':4,'Alerta':3,'Resistencia':4,'Lucha':3,'Voluntad':3},
+    esp: {'Atletismo':['Correr 2B','Fuerza 2B'],'Alerta':['Notar 3B'],'Resistencia':['Aguante 3B']},
+    stats: {'DC':11,'RA':0,'Salud':12,'Mov':'8 yd'},
+    eq: 'Mordisco: 3D, 4 daño | Casco: 3D, 6 daño, Poderoso'
+  }
+};
+
+function volverAlManual() {
+  if (document.referrer && document.referrer.includes(window.location.hostname)) {
+    window.history.back();
+  } else {
+    window.location.href = './';
+  }
+}
+
+function cambiarPanel(id, btn) {
+  var panels = document.querySelectorAll('.panel');
+  var tabs = document.querySelectorAll('.tab');
+  for (var i = 0; i < panels.length; i++) {
+    panels[i].classList.remove('active');
+  }
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove('active');
+  }
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function rand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generarPNJ() {
+  var tipo = document.getElementById('npcType').value;
+  var nombreInput = document.getElementById('npcName').value.trim();
+  var rol = document.getElementById('npcRole').value;
+
+  var nombre = nombreInput || (pick(NOMBRES) + ' ' + pick(APELLIDOS));
+
+  var hab = {};
+  if (tipo === 'tertiary') hab = genTerciario(rol);
+  else if (tipo === 'secondary') hab = genSecundario(rol);
+  else hab = genPrimario(rol);
+
+  var esp = {};
+  var keys = Object.keys(hab);
+  for (var i = 0; i < keys.length; i++) {
+    var h = keys[i];
+    if (ESPECIALIDADES[h] && Math.random() > 0.4) {
+      var e = pick(ESPECIALIDADES[h]);
+      var r = Math.max(1, Math.floor(hab[h] / 2));
+      esp[h] = e + ' ' + r + 'B';
+    }
+  }
+
+  var ag = hab['Agilidad'] || 0;
+  var at = hab['Atletismo'] || 0;
+  var al = hab['Alerta'] || 0;
+  var as = hab['Astucia'] || 0;
+  var re = hab['Resistencia'] || 0;
+  var es = hab['Estatus'] || 0;
+  var vo = hab['Voluntad'] || 0;
+
+  var dc = ag + at + al;
+  var di = al + as + es;
+  var salud = re * 3;
+  var comp = vo * 3;
+
+  var tipoLabel = tipo === 'tertiary' ? '🟢 Terciario' : (tipo === 'secondary' ? '🟡 Secundario' : '🔴 Primario');
+
+  var html = '<div class="result-card">';
+  html += '<h3>' + nombre + '</h3>';
+  html += '<p><strong>Tipo:</strong> ' + tipoLabel + '</p>';
+
+  html += '<div class="result-section"><h4>📊 Habilidades</h4><div class="result-grid">';
+  var habKeys = Object.keys(hab).sort();
+  for (var i = 0; i < habKeys.length; i++) {
+    html += '<div class="stat-pill"><strong>' + habKeys[i] + ':</strong> ' + hab[habKeys[i]] + '</div>';
+  }
+  html += '</div></div>';
+
+  var espKeys = Object.keys(esp);
+  if (espKeys.length > 0) {
+    html += '<div class="result-section"><h4>✨ Especialidades</h4><div class="result-grid">';
+    for (var i = 0; i < espKeys.length; i++) {
+      html += '<div class="stat-pill">' + espKeys[i] + ': ' + esp[espKeys[i]] + '</div>';
+    }
+    html += '</div></div>';
+  }
+
+  html += '<div class="result-section"><h4>🛡️ Estadísticas</h4><div class="result-grid">';
+  html += '<div class="stat-pill"><strong>DC:</strong> ' + dc + '</div>';
+  html += '<div class="stat-pill"><strong>DI:</strong> ' + di + '</div>';
+  html += '<div class="stat-pill"><strong>Salud:</strong> ' + salud + '</div>';
+  html += '<div class="stat-pill"><strong>Compostura:</strong> ' + comp + '</div>';
+  html += '</div></div>';
+
+  html += '<div class="result-section"><h4>🎭 Rasgos</h4>';
+  html += '<div class="trait-box"><strong>Físico:</strong> ' + pick(RASGOS_FISICOS) + '</div>';
+  html += '<div class="trait-box"><strong>Personalidad:</strong> ' + pick(RASGOS_PERSONALIDAD) + '</div>';
+  html += '</div></div>';
+
+  document.getElementById('resultContainer').innerHTML = html;
+}
+
+function genTerciario(rol) {
+  var hab = {};
+  var principal = pickHabilidad(rol);
+  hab[principal] = rand(3, 4);
+  var disp = HABILIDADES.filter(function(h) { return h !== principal; });
+  var extra = rand(1, 2);
+  for (var i = 0; i < extra; i++) {
+    var idx = rand(0, disp.length - 1);
+    hab[disp[idx]] = 3;
+    disp.splice(idx, 1);
+  }
+  return hab;
+}
+
+function genSecundario(rol) {
+  var hab = {};
+  var principal = pickHabilidad(rol);
+  hab[principal] = 5;
+  var disp = HABILIDADES.filter(function(h) { return h !== principal; });
+  for (var i = 0; i < 2; i++) {
+    var idx = rand(0, disp.length - 1);
+    hab[disp[idx]] = 4;
+    disp.splice(idx, 1);
+  }
+  for (var i = 0; i < 4 && disp.length > 0; i++) {
+    var idx = rand(0, disp.length - 1);
+    hab[disp[idx]] = 3;
+    disp.splice(idx, 1);
+  }
+  return hab;
+}
+
+function genPrimario(rol) {
+  var hab = {};
+  var principal = pickHabilidad(rol);
+  hab[principal] = rand(5, 7);
+  var disp = HABILIDADES.filter(function(h) { return h !== principal; });
+  for (var i = 0; i < 3; i++) {
+    var idx = rand(0, disp.length - 1);
+    hab[disp[idx]] = rand(4, 5);
+    disp.splice(idx, 1);
+  }
+  for (var i = 0; i < 4 && disp.length > 0; i++) {
+    var idx = rand(0, disp.length - 1);
+    hab[disp[idx]] = 3;
+    disp.splice(idx, 1);
+  }
+  return hab;
+}
+
+function pickHabilidad(rol) {
+  var mapa = {
+    'guardia': ['Lucha','Atletismo','Alerta'],
+    'bandido': ['Lucha','Sigilo','Supervivencia'],
+    'noble': ['Estatus','Persuasión','Astucia'],
+    'sabio': ['Conocimiento','Curación','Idioma'],
+    'asesino': ['Sigilo','Lucha','Robo'],
+    'caballero': ['Lucha','Puntería','Manejo de Animales']
+  };
+  if (rol === 'random' || !mapa[rol]) return pick(HABILIDADES);
+  return pick(mapa[rol]);
+}
+
+function renderCard(nombre, data) {
+  var html = '<div class="result-card">';
+  html += '<h3>' + nombre + '</h3>';
+  html += '<p>' + data.desc + '</p>';
+
+  html += '<div class="result-section"><h4>📊 Habilidades</h4><div class="result-grid">';
+  var keys = Object.keys(data.hab).sort();
+  for (var i = 0; i < keys.length; i++) {
+    html += '<div class="stat-pill"><strong>' + keys[i] + ':</strong> ' + data.hab[keys[i]] + '</div>';
+  }
+  html += '</div></div>';
+
+  var espKeys = Object.keys(data.esp);
+  if (espKeys.length > 0) {
+    html += '<div class="result-section"><h4>✨ Especialidades</h4><div class="result-grid">';
+    for (var i = 0; i < espKeys.length; i++) {
+      html += '<div class="stat-pill">' + espKeys[i] + ': ' + data.esp[espKeys[i]] + '</div>';
+    }
+    html += '</div></div>';
+  }
+
+  html += '<div class="result-section"><h4>🛡️ Estadísticas</h4><div class="result-grid">';
+  var statKeys = Object.keys(data.stats);
+  for (var i = 0; i < statKeys.length; i++) {
+    html += '<div class="stat-pill"><strong>' + statKeys[i] + ':</strong> ' + data.stats[statKeys[i]] + '</div>';
+  }
+  html += '</div></div>';
+
+  html += '<div class="result-section"><h4>⚔️ Equipo / Ataques</h4><p>' + data.eq + '</p></div>';
+  html += '</div>';
+  return html;
+}
+
+function mostrarPreset(nombre) {
+  document.getElementById('resultContainer').innerHTML = renderCard(nombre, PNJS[nombre]);
+  cambiarPanel('generator', document.querySelector('.tab[data-panel="generator"]'));
+}
+
+function mostrarCriatura(nombre) {
+  document.getElementById('resultContainer').innerHTML = renderCard('🐾 ' + nombre, CRIATURAS[nombre]);
+  cambiarPanel('generator', document.querySelector('.tab[data-panel="generator"]'));
+}
+
+function cargarPresets() {
+  var grid = document.getElementById('presetGrid');
+  var html = '';
+  var keys = Object.keys(PNJS);
+  for (var i = 0; i < keys.length; i++) {
+    var n = keys[i];
+    var p = PNJS[n];
+    html += '<div class="preset-card" onclick="mostrarPreset(\'' + n + '\')">';
+    html += '<h4>' + n + '</h4>';
+    html += '<p>' + p.desc + '</p>';
+    html += '<div class="preset-stats">';
+    html += '<strong>DC:</strong> ' + (p.stats['DC'] || '—') + ' | ';
+    html += '<strong>Salud:</strong> ' + (p.stats['Salud'] || '—');
+    html += '</div></div>';
+  }
+  grid.innerHTML = html;
+}
+
+function cargarCriaturas() {
+  var grid = document.getElementById('creatureGrid');
+  var html = '';
+  var keys = Object.keys(CRIATURAS);
+  for (var i = 0; i < keys.length; i++) {
+    var n = keys[i];
+    var c = CRIATURAS[n];
+    html += '<div class="preset-card" onclick="mostrarCriatura(\'' + n + '\')">';
+    html += '<h4>🐾 ' + n + '</h4>';
+    html += '<p>' + c.desc + '</p>';
+    html += '<div class="preset-stats">';
+    html += '<strong>DC:</strong> ' + c.stats['DC'] + ' | ';
+    html += '<strong>Salud:</strong> ' + c.stats['Salud'] + ' | ';
+    html += '<strong>Mov:</strong> ' + c.stats['Mov'];
+    html += '</div></div>';
+  }
+  grid.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  cargarPresets();
+  cargarCriaturas();
+});
+</script>
+
+</body>
+</html>

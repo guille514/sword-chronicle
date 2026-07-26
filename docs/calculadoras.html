@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadoras Interactivas - Sword Chronicle</title>
+<style>
+  :root {
+    --primary: #3f51b5;
+    --primary-dark: #303f9f;
+    --accent: #ffc107;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-light: #757575;
+    --border: #e0e0e0;
+    --success: #4caf50;
+    --info: #2196f3;
+    --warning: #ff9800;
+    --danger: #f44336;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 20px;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  header h1 { font-size: 2em; margin-bottom: 8px; }
+  header p { opacity: 0.9; font-size: 1.05em; }
+
+  .toolbar {
+    background: var(--card);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+  .btn-primary { background: var(--primary); color: white; }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    background: var(--card);
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .tab {
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.2s;
+    color: var(--text-light);
+  }
+
+  .tab:hover { background: #f0f0f0; color: var(--text); }
+  .tab.active { background: var(--primary); color: white; }
+
+  .calculator {
+    background: var(--card);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    display: none;
+  }
+
+  .calculator.active { display: block; }
+
+  .calculator h2 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+  }
+
+  .calculator-description {
+    color: var(--text-light);
+    margin-bottom: 20px;
+    font-size: 0.95em;
+    padding: 12px;
+    background: #f5f7ff;
+    border-left: 4px solid var(--info);
+    border-radius: 4px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .field { display: flex; flex-direction: column; }
+  .field label {
+    font-size: 0.85em;
+    color: var(--text-light);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .field input, .field select {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95em;
+    transition: border-color 0.2s;
+  }
+
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+  }
+
+  .result-box {
+    background: linear-gradient(135deg, #f5f7ff, #e8ebff);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 4px solid var(--primary);
+    margin-top: 15px;
+  }
+
+  .result-label {
+    font-size: 0.9em;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .result-value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  .result-detail {
+    font-size: 0.9em;
+    color: var(--text-light);
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  .formula {
+    background: #f5f5f5;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--text);
+    margin-top: 15px;
+    text-align: center;
+    border: 1px dashed var(--border);
+  }
+
+  .dice-roller {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+    justify-content: center;
+  }
+
+  .die {
+    width: 45px;
+    height: 45px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    transition: all 0.3s;
+  }
+
+  .die.kept { background: var(--success); color: white; border-color: var(--success); }
+  .die.dropped { background: #f5f5f5; color: #ccc; border-color: var(--border); opacity: 0.5; }
+  .die.bonus { background: var(--accent); color: #333; border-color: var(--accent); }
+
+  .roll-btn {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.2s;
+  }
+
+  .roll-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.5em; }
+    .form-grid { grid-template-columns: 1fr; }
+    .result-value { font-size: 2em; }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --card: #2d2d2d;
+      --text: #e0e0e0;
+      --text-light: #a0a0a0;
+      --border: #444;
+    }
+    .calculator-description { background: #1a1a2e; }
+    .formula { background: #1a1a1a; }
+    .die { background: #1a1a1a; }
+    .die.dropped { background: #1a1a1a; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <h1>🧮 Calculadoras Interactivas</h1>
+  <p>Herramientas de cálculo rápido para Sword Chronicle</p>
+</header>
+
+<div class="toolbar">
+  <button class="btn btn-primary" onclick="volverAlManual()">⬅️ Volver al Manual</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showCalculator('damage')">⚔️ Daño</button>
+  <button class="tab" onclick="showCalculator('defense')">🛡️ Defensas</button>
+  <button class="tab" onclick="showCalculator('stats')">📊 Estadísticas</button>
+  <button class="tab" onclick="showCalculator('intrigue')">🎭 Intriga</button>
+  <button class="tab" onclick="showCalculator('test')">🎲 Prueba</button>
+</div>
+
+<!-- CALCULADORA DE DAÑO -->
+<div id="damage" class="calculator active">
+  <h2>⚔️ Calculadora de Daño</h2>
+  <div class="calculator-description">
+    Calcula el daño final de un ataque según las reglas de Sword Chronicle. 
+    El daño base se multiplica por los grados de éxito y se reduce con la RA del objetivo.
+  </div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label>Habilidad base (rango)</label>
+      <input type="number" id="dmg-ability" min="0" max="10" value="3" oninput="calcularDano()">
+    </div>
+    <div class="field">
+      <label>Modificador del arma (+/-)</label>
+      <input type="number" id="dmg-weapon" min="-5" max="10" value="0" oninput="calcularDano()">
+    </div>
+    <div class="field">
+      <label>Grados de éxito</label>
+      <input type="number" id="dmg-degrees" min="1" max="10" value="1" oninput="calcularDano()">
+    </div>
+    <div class="field">
+      <label>RA del objetivo (Armadura)</label>
+      <input type="number" id="dmg-ar" min="0" max="20" value="0" oninput="calcularDano()">
+    </div>
+    <div class="field">
+      <label>Bono defensivo del escudo</label>
+      <input type="number" id="dmg-defbonus" min="0" max="10" value="0" oninput="calcularDano()">
+    </div>
+    <div class="field">
+      <label>Penetrante (ignora RA)</label>
+      <input type="number" id="dmg-piercing" min="0" max="10" value="0" oninput="calcularDano()">
+    </div>
+  </div>
+
+  <div class="result-box">
+    <div class="result-label">Daño Final</div>
+    <div class="result-value" id="dmg-result">0</div>
+    <div class="result-detail" id="dmg-detail">Daño base: 0 × 1 grado(s) = 0 - 0 RA = 0</div>
+  </div>
+
+  <div class="formula">
+    Fórmula: (Habilidad ± Modificador arma) × Grados de éxito - (RA - Penetrante)
+  </div>
+</div>
+
+<!-- CALCULADORA DE DEFENSAS -->
+<div id="defense" class="calculator">
+  <h2>🛡️ Calculadora de Defensas</h2>
+  <div class="calculator-description">
+    Calcula las tres defensas principales de tu personaje: Combate, Intriga y Hechicería.
+  </div>
+
+  <h3 style="color: var(--primary); margin: 20px 0 10px;">Defensa de Combate</h3>
+  <div class="form-grid">
+    <div class="field">
+      <label>Agilidad</label>
+      <input type="number" id="def-agilidad" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Atletismo</label>
+      <input type="number" id="def-atletismo" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Alerta</label>
+      <input type="number" id="def-alerta" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Bono Defensivo (escudo/parada)</label>
+      <input type="number" id="def-bonus" min="0" max="10" value="0" oninput="calcularDefensas()">
+    </div>
+  </div>
+  <div class="result-box">
+    <div class="result-label">Defensa de Combate</div>
+    <div class="result-value" id="def-combate">0</div>
+    <div class="formula">Agilidad + Atletismo + Alerta + Bono Defensivo</div>
+  </div>
+
+  <h3 style="color: var(--primary); margin: 30px 0 10px;">Defensa de Intriga</h3>
+  <div class="form-grid">
+    <div class="field">
+      <label>Alerta</label>
+      <input type="number" id="intr-alerta" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Astucia</label>
+      <input type="number" id="intr-astucia" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Estatus</label>
+      <input type="number" id="intr-estatus" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+  </div>
+  <div class="result-box">
+    <div class="result-label">Defensa de Intriga</div>
+    <div class="result-value" id="def-intriga">0</div>
+    <div class="formula">Alerta + Astucia + Estatus</div>
+  </div>
+
+  <h3 style="color: var(--primary); margin: 30px 0 10px;">Defensa de Hechicería</h3>
+  <div class="form-grid">
+    <div class="field">
+      <label>Astucia</label>
+      <input type="number" id="sor-astucia" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Resistencia</label>
+      <input type="number" id="sor-resistencia" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Voluntad</label>
+      <input type="number" id="sor-voluntad" min="0" max="10" value="2" oninput="calcularDefensas()">
+    </div>
+    <div class="field">
+      <label>Bono de Aversión</label>
+      <input type="number" id="sor-aversion" min="0" max="10" value="0" oninput="calcularDefensas()">
+    </div>
+  </div>
+  <div class="result-box">
+    <div class="result-label">Defensa de Hechicería</div>
+    <div class="result-value" id="def-hechiceria">0</div>
+    <div class="formula">Astucia + Resistencia + Voluntad + Bono de Aversión</div>
+  </div>
+</div>
+
+<!-- CALCULADORA DE ESTADÍSTICAS -->
+<div id="stats" class="calculator">
+  <h2>📊 Calculadora de Estadísticas</h2>
+  <div class="calculator-description">
+    Calcula las estadísticas derivadas principales: Salud, Compostura y Movimiento.
+  </div>
+
+  <h3 style="color: var(--primary); margin: 20px 0 10px;">Salud</h3>
+  <div class="form-grid">
+    <div class="field">
+      <label>Resistencia (rango)</label>
+      <input type="number" id="stat-resistencia" min="0" max="10" value="2" oninput="calcularStats()">
+    </div>
+  </div>
+  <div class="result-box">
+    <div class="result-label">Salud</div>
+    <div class="result-value" id="stat-salud">0</div>
+    <div class="formula">Salud = 3 × Resistencia</div>
+  </div>
+
+  <h3 style="color: var(--primary); margin: 30px 0 10px;">Compostura</h3>
+  <div class="form-grid">
+    <div class="field">
+      <label>Voluntad (rango)</label>
+      <input type="number" id="stat-voluntad" min="0" max="10" value="2" oninput="calcularStats()">
+    </div>
+  </div>
+  <div class="result-box">
+    <div class="result-label">Compostura</div>
+    <div class="result-value" id="stat-compostura">0</div>
+    <div class="formula">Compostura = 3 × Voluntad</div>
+  </div>
+
+  <h3 style="color: var(--primary); margin: 30px 0 10px;">Movimiento</h3>
+  <div class="form-grid">
+    <div class="field">
+      <label>Dados de bono en Correr</label>
+      <input type="number" id="stat-correr" min="0" max="10" value="0" oninput="calcularStats()">
+    </div>
+    <div class="field">
+      <label>Volumen de armadura/equipo</label>
+      <input type="number" id="stat-volumen" min="0" max="10" value="0" oninput="calcularStats()">
+    </div>
+  </div>
+  <div class="result-box">
+    <div class="result-label">Movimiento</div>
+    <div class="result-value" id="stat-movimiento">0</div>
+    <div class="result-detail" id="stat-movimiento-detail"></div>
+    <div class="formula">Movimiento = 4 + (Correr ÷ 2) - (Volumen ÷ 2)</div>
+  </div>
+</div>
+
+<!-- CALCULADORA DE INTRIGA -->
+<div id="intrigue" class="calculator">
+  <h2>🎭 Calculadora de Intriga</h2>
+  <div class="calculator-description">
+    Calcula la Influencia generada por una técnica de intriga y la Compostura restante.
+  </div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label>Rango de la habilidad usada</label>
+      <input type="number" id="int-habilidad" min="0" max="10" value="3" oninput="calcularIntriga()">
+    </div>
+    <div class="field">
+      <label>Grados de éxito</label>
+      <input type="number" id="int-grados" min="0" max="10" value="1" oninput="calcularIntriga()">
+    </div>
+    <div class="field">
+      <label>Valor de Disposición (DR)</label>
+      <select id="int-disposicion" onchange="calcularIntriga()">
+        <option value="1">Afectuoso (DR 1)</option>
+        <option value="2">Amistoso (DR 2)</option>
+        <option value="3">Amable (DR 3)</option>
+        <option value="4" selected>Indiferente (DR 4)</option>
+        <option value="5">Desagrado (DR 5)</option>
+        <option value="6">Hostil (DR 6)</option>
+        <option value="7">Malicioso (DR 7)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Compostura actual</label>
+      <input type="number" id="int-compostura" min="0" max="30" value="12" oninput="calcularIntriga()">
+    </div>
+  </div>
+
+  <div class="result-box">
+    <div class="result-label">Influencia Generada</div>
+    <div class="result-value" id="int-influencia">0</div>
+    <div class="result-detail" id="int-detail"></div>
+  </div>
+
+  <div class="result-box" style="margin-top: 15px; background: linear-gradient(135deg, #fff5f5, #ffe8e8); border-left-color: var(--danger);">
+    <div class="result-label">Compostura Restante</div>
+    <div class="result-value" id="int-restante" style="color: var(--danger);">0</div>
+    <div class="result-detail" id="int-restante-detail"></div>
+  </div>
+
+  <div class="formula">
+    Influencia = (Habilidad × Grados) - DR | Compostura restante = Compostura - Influencia
+  </div>
+</div>
+
+<!-- CALCULADORA DE PRUEBA -->
+<div id="test" class="calculator">
+  <h2>🎲 Simulador de Prueba</h2>
+  <div class="calculator-description">
+    Simula una tirada de dados según las reglas de Sword Chronicle. 
+    Introduce tu rango de habilidad y dados de bonificación para ver el resultado.
+  </div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label>Rango de habilidad (dados de prueba)</label>
+      <input type="number" id="test-rank" min="1" max="10" value="3" oninput="actualizarDados()">
+    </div>
+    <div class="field">
+      <label>Dados de bonificación</label>
+      <input type="number" id="test-bonus" min="0" max="10" value="0" oninput="actualizarDados()">
+    </div>
+    <div class="field">
+      <label>Dados de penalización</label>
+      <input type="number" id="test-penalty" min="0" max="5" value="0" oninput="actualizarDados()">
+    </div>
+    <div class="field">
+      <label>Dificultad</label>
+      <input type="number" id="test-difficulty" min="0" max="30" value="9" oninput="calcularPrueba()">
+    </div>
+    <div class="field">
+      <label>Modificadores (+/-)</label>
+      <input type="number" id="test-modifier" min="-10" max="10" value="0" oninput="calcularPrueba()">
+    </div>
+  </div>
+
+  <div style="text-align: center;">
+    <button class="roll-btn" onclick="tirarDados()">🎲 ¡Tirar Dados!</button>
+  </div>
+
+  <div class="dice-roller" id="dice-container"></div>
+
+  <div class="result-box" style="margin-top: 20px;">
+    <div class="result-label">Resultado de la Prueba</div>
+    <div class="result-value" id="test-result">-</div>
+    <div class="result-detail" id="test-detail">Presiona "Tirar Dados" para comenzar</div>
+  </div>
+
+  <div class="formula">
+    Suma los mejores dados (igual a tu rango) descartando los dados de bono más bajos y los de penalización
+  </div>
+</div>
+
+</div>
+
+<script>
+// ====== NAVEGACIÓN ======
+function volverAlManual() {
+  if (document.referrer && document.referrer.includes(window.location.hostname)) {
+    window.history.back();
+  } else {
+    window.location.href = './';
+  }
+}
+
+function showCalculator(id) {
+  document.querySelectorAll('.calculator').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ====== CALCULADORA DE DAÑO ======
+function calcularDano() {
+  const habilidad = parseInt(document.getElementById('dmg-ability').value) || 0;
+  const arma = parseInt(document.getElementById('dmg-weapon').value) || 0;
+  const grados = parseInt(document.getElementById('dmg-degrees').value) || 1;
+  const ar = parseInt(document.getElementById('dmg-ar').value) || 0;
+  const defbonus = parseInt(document.getElementById('dmg-defbonus').value) || 0;
+  const piercing = parseInt(document.getElementById('dmg-piercing').value) || 0;
+
+  const danoBase = Math.max(1, habilidad + arma);
+  const danoTotal = danoBase * grados;
+  const arEfectiva = Math.max(0, ar + defbonus - piercing);
+  const danoFinal = Math.max(0, danoTotal - arEfectiva);
+
+  document.getElementById('dmg-result').textContent = danoFinal;
+  document.getElementById('dmg-detail').textContent = 
+    `Daño base: ${danoBase} × ${grados} grado(s) = ${danoTotal} - ${arEfectiva} RA = ${danoFinal}`;
+}
+
+// ====== CALCULADORA DE DEFENSAS ======
+function calcularDefensas() {
+  // Defensa de Combate
+  const agilidad = parseInt(document.getElementById('def-agilidad').value) || 0;
+  const atletismo = parseInt(document.getElementById('def-atletismo').value) || 0;
+  const alerta = parseInt(document.getElementById('def-alerta').value) || 0;
+  const bonus = parseInt(document.getElementById('def-bonus').value) || 0;
+  const defCombate = agilidad + atletismo + alerta + bonus;
+  document.getElementById('def-combate').textContent = defCombate;
+
+  // Defensa de Intriga
+  const intrAlerta = parseInt(document.getElementById('intr-alerta').value) || 0;
+  const intrAstucia = parseInt(document.getElementById('intr-astucia').value) || 0;
+  const intrEstatus = parseInt(document.getElementById('intr-estatus').value) || 0;
+  const defIntriga = intrAlerta + intrAstucia + intrEstatus;
+  document.getElementById('def-intriga').textContent = defIntriga;
+
+  // Defensa de Hechicería
+  const sorAstucia = parseInt(document.getElementById('sor-astucia').value) || 0;
+  const sorResistencia = parseInt(document.getElementById('sor-resistencia').value) || 0;
+  const sorVoluntad = parseInt(document.getElementById('sor-voluntad').value) || 0;
+  const sorAversion = parseInt(document.getElementById('sor-aversion').value) || 0;
+  const defHechiceria = sorAstucia + sorResistencia + sorVoluntad + sorAversion;
+  document.getElementById('def-hechiceria').textContent = defHechiceria;
+}
+
+// ====== CALCULADORA DE ESTADÍSTICAS ======
+function calcularStats() {
+  // Salud
+  const resistencia = parseInt(document.getElementById('stat-resistencia').value) || 0;
+  document.getElementById('stat-salud').textContent = 3 * resistencia;
+
+  // Compostura
+  const voluntad = parseInt(document.getElementById('stat-voluntad').value) || 0;
+  document.getElementById('stat-compostura').textContent = 3 * voluntad;
+
+  // Movimiento
+  const correr = parseInt(document.getElementById('stat-correr').value) || 0;
+  const volumen = parseInt(document.getElementById('stat-volumen').value) || 0;
+  const bonoMovimiento = Math.floor(correr / 2);
+  const penalizacionMovimiento = Math.floor(volumen / 2);
+  const movimiento = Math.max(1, 4 + bonoMovimiento - penalizacionMovimiento);
+  
+  document.getElementById('stat-movimiento').textContent = movimiento + ' yd';
+  
+  let detail = 'Base: 4 yd';
+  if (bonoMovimiento > 0) detail += ` + ${bonoMovimiento} (Correr)`;
+  if (penalizacionMovimiento > 0) detail += ` - ${penalizacionMovimiento} (Volumen)`;
+  document.getElementById('stat-movimiento-detail').textContent = detail;
+}
+
+// ====== CALCULADORA DE INTRIGA ======
+function calcularIntriga() {
+  const habilidad = parseInt(document.getElementById('int-habilidad').value) || 0;
+  const grados = parseInt(document.getElementById('int-grados').value) || 0;
+  const dr = parseInt(document.getElementById('int-disposicion').value) || 4;
+  const compostura = parseInt(document.getElementById('int-compostura').value) || 0;
+
+  const influenciaBruta = habilidad * grados;
+  const influencia = Math.max(0, influenciaBruta - dr);
+  const restante = Math.max(0, compostura - influencia);
+
+  document.getElementById('int-influencia').textContent = influencia;
+  document.getElementById('int-detail').textContent = 
+    `${habilidad} × ${grados} = ${influenciaBruta} - ${dr} DR = ${influencia}`;
+  
+  document.getElementById('int-restante').textContent = restante;
+  
+  if (restante <= 0) {
+    document.getElementById('int-restante-detail').textContent = '⚠️ ¡Has sido derrotado en la intriga!';
+    document.getElementById('int-restante').style.color = 'var(--danger)';
+  } else if (restante <= compostura * 0.3) {
+    document.getElementById('int-restante-detail').textContent = '⚠️ ¡Peligro! Estás cerca de la derrota.';
+    document.getElementById('int-restante').style.color = 'var(--warning)';
+  } else {
+    document.getElementById('int-restante-detail').textContent = '✓ Aún tienes compostura suficiente.';
+    document.getElementById('int-restante').style.color = 'var(--success)';
+  }
+}
+
+// ====== SIMULADOR DE PRUEBA ======
+let dadosActuales = [];
+
+function actualizarDados() {
+  const rank = parseInt(document.getElementById('test-rank').value) || 1;
+  const bonus = parseInt(document.getElementById('test-bonus').value) || 0;
+  const penalty = parseInt(document.getElementById('test-penalty').value) || 0;
+  
+  const totalDados = rank + bonus + penalty;
+  const container = document.getElementById('dice-container');
+  container.innerHTML = '';
+  
+  for (let i = 0; i < totalDados; i++) {
+    const die = document.createElement('div');
+    die.className = 'die';
+    if (i < rank) {
+      die.dataset.type = 'test';
+    } else if (i < rank + bonus) {
+      die.className += ' bonus';
+      die.dataset.type = 'bonus';
+    } else {
+      die.dataset.type = 'penalty';
+    }
+    die.textContent = '?';
+    container.appendChild(die);
+  }
+}
+
+function tirarDados() {
+  const rank = parseInt(document.getElementById('test-rank').value) || 1;
+  const bonus = parseInt(document.getElementById('test-bonus').value) || 0;
+  const penalty = parseInt(document.getElementById('test-penalty').value) || 0;
+  const difficulty = parseInt(document.getElementById('test-difficulty').value) || 9;
+  const modifier = parseInt(document.getElementById('test-modifier').value) || 0;
+
+  // Generar tiradas
+  const testDice = [];
+  const bonusDice = [];
+  const penaltyDice = [];
+
+  for (let i = 0; i < rank; i++) testDice.push(Math.floor(Math.random() * 6) + 1);
+  for (let i = 0; i < bonus; i++) bonusDice.push(Math.floor(Math.random() * 6) + 1);
+  for (let i = 0; i < penalty; i++) penaltyDice.push(Math.floor(Math.random() * 6) + 1);
+
+  // Ordenar dados de bono de mayor a menor
+  bonusDice.sort((a, b) => b - a);
+  
+  // Descartar los dados de bono más bajos
+  const bonusToKeep = Math.min(bonus, rank);
+  const bonusToDrop = bonus - bonusToKeep;
+  const bonusKept = bonusDice.slice(0, bonusToKeep);
+  const bonusDropped = bonusDice.slice(bonusToKeep);
+
+  // Ordenar dados de prueba de mayor a menor
+  testDice.sort((a, b) => b - a);
+  
+  // Aplicar dados de penalización (descartar los más bajos)
+  const testKept = testDice.slice(0, Math.max(0, rank - penalty));
+  const testDropped = testDice.slice(Math.max(0, rank - penalty));
+
+  // Calcular resultado
+  const allKept = [...testKept, ...bonusKept];
+  const result = allKept.reduce((sum, val) => sum + val, 0) + modifier;
+  const diff = result - difficulty;
+
+  // Mostrar dados
+  const container = document.getElementById('dice-container');
+  container.innerHTML = '';
+
+  testKept.forEach(val => {
+    const die = document.createElement('div');
+    die.className = 'die kept';
+    die.textContent = val;
+    container.appendChild(die);
+  });
+
+  bonusKept.forEach(val => {
+    const die = document.createElement('div');
+    die.className = 'die bonus';
+    die.textContent = val;
+    container.appendChild(die);
+  });
+
+  testDropped.forEach(val => {
+    const die = document.createElement('div');
+    die.className = 'die dropped';
+    die.textContent = val;
+    container.appendChild(die);
+  });
+
+  bonusDropped.forEach(val => {
+    const die = document.createElement('div');
+    die.className = 'die dropped';
+    die.textContent = val;
+    container.appendChild(die);
+  });
+
+  penaltyDice.forEach(val => {
+    const die = document.createElement('div');
+    die.className = 'die dropped';
+    die.textContent = val;
+    die.style.borderColor = 'var(--danger)';
+    container.appendChild(die);
+  });
+
+  // Mostrar resultado
+  document.getElementById('test-result').textContent = result;
+  
+  let grado = '';
+  if (diff >= 15) grado = '🎖️ Éxito asombroso';
+  else if (diff >= 10) grado = '⭐ Éxito increíble';
+  else if (diff >= 5) grado = '🌟 Gran éxito';
+  else if (diff >= 0) grado = '✅ Éxito marginal';
+  else if (diff >= -4) grado = '❌ Fracaso marginal';
+  else grado = '💀 Fracaso crítico';
+
+  document.getElementById('test-detail').textContent = 
+    `Resultado: ${result} vs Dificultad ${difficulty} | Diferencia: ${diff >= 0 ? '+' : ''}${diff} | ${grado}`;
+}
+
+// ====== INICIALIZACIÓN ======
+document.addEventListener('DOMContentLoaded', () => {
+  calcularDano();
+  calcularDefensas();
+  calcularStats();
+  calcularIntriga();
+  actualizarDados();
+});
+</script>
+
+</body>
+</html>
