@@ -46,3 +46,13 @@ nav:
     - Puntos de Destino: destino/puntos.md
     - Beneficios: destino/beneficios.md
     - Defectos: destino/defectos.md
+  - Casa y Tierras:
+    - Creación de la Casa: casa/creacion.md
+    - Dominios y Tenencias: casa/dominios.md
+    - Distinciones y El Hogar: casa/distinciones.md
+  - Hechicería:
+    - Introducción: magia/introduccion.md
+    - Arte de la Bendición: magia/bendicion.md
+    - Arte de la Adivinación: magia/adivinacion.md
+    - Arte de la Maldición: magia/maldicion.md
+    - Arte de la Protección: magia/proteccion.md

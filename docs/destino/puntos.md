@@ -1,6 +1,6 @@
 # 🌟 Puntos de Destino
 
-El destino te separa del resto. Es el pincel en el lienzo de tu vida. Es suerte, destino o quizás providencia divina. Independientemente de su origen, es lo que finalmente te distingue de las personas con vidas menos interesantes. 
+El destino te separa del resto. Es el pincel en el lienzo de tu vida: suerte, destino o quizás providencia divina. Independientemente de su origen, es lo que finalmente te distingue de las personas con vidas menos interesantes.
 
 En *Sword Chronicle*, la vida no es necesariamente justa, pero aquellos con dones excepcionales (como los personajes jugadores) a menudo cargan con desafíos a la altura.
 
@@ -8,7 +8,7 @@ En *Sword Chronicle*, la vida no es necesariamente justa, pero aquellos con done
 
 ## 🎯 ¿Qué son los Puntos de Destino?
 
-El destino es oportunidad: la capacidad de moldear los resultados de tus experiencias alterando sutilmente la historia para superar la adversidad y elevarte por encima de las caprichosas fortunas de la mera probabilidad. 
+El destino es oportunidad: la capacidad de moldear los resultados de tus experiencias alterando sutilmente la historia para superar la adversidad y elevarte por encima de las caprichosas fortunas de la mera probabilidad.
 
 Tu destino vive en los **Puntos de Destino**. A través de ellos, tomas el control de la historia, creas oportunidades donde no existen, escapas de una muerte casi segura o los usas para avanzar en tu propia causa.
 
@@ -78,7 +78,7 @@ Una vez que quemas un Punto de Destino, se pierde. Sin embargo, hay formas de ob
 
 1. **Gastar Experiencia:** Puedes adquirir Puntos de Destino adicionales gastando Experiencia ganada durante el juego (cuesta 50 Exp por Punto).
 2. **Premio del Narrador:** El Narrador puede otorgar 1 Punto de Destino adicional a la Gloria y la Experiencia por un juego excepcional.
-3. **Adquirir un Defecto:** Puedes adquirir un Defecto (Drawback) para ganar 1 Punto de Destino, aunque debes idear una explicación razonable de cómo obtienes esta cualidad negativa.
+3. **Adquirir un Defecto:** Puedes adquirir un Defecto para ganar 1 Punto de Destino, aunque debes idear una explicación razonable de cómo obtienes esta cualidad negativa.
 
 !!! info "ℹ️ Nota Importante"
     Los Defectos ganados como consecuencia directa del combate, la guerra o las intrigas **no** otorgan Puntos de Destino. Solo los Defectos elegidos voluntariamente durante la creación o el desarrollo del personaje lo hacen.

@@ -36,13 +36,13 @@ Todos los personajes comienzan con **rango 2** en cada habilidad. Usando la Expe
 | +5 | 7 (o 5) | 130 |
 
 !!! tip "💡 Consejo"
-    Empieza por las habilidades de tu rol, luego elige algunas más relacionadas con tu concepto. **¡Resiste la tentación de maximizar una habilidad!** Para un adulto, una habilidad de 6 cuesta casi la mitad de tu experiencia.
+    ¡Resiste la tentación de maximizar una habilidad! Para un adulto, una habilidad de 6 cuesta casi la mitad de tu experiencia.
 
 ---
 
 ## 🎯 Paso 4: Asignar Especialidades
 
-Las especialidades son áreas de experiencia dentro de una habilidad que otorgan **dados de bonificación**. Tu edad determina cuánta Experiencia tienes para adquirir especialidades (cada dado de bonificación cuesta 10 Exp).
+Las especialidades son áreas de experiencia dentro de una habilidad que otorgan **dados de bonificación**. Cada dado de bonificación cuesta **10 Exp**.
 
 | Edad | Experiencia para Especialidades |
 |:-----|:-------------------------------:|
@@ -59,7 +59,7 @@ Las especialidades son áreas de experiencia dentro de una habilidad que otorgan
 
 ## ✨ Paso 5: Puntos de Destino y Beneficios
 
-Los Puntos de Destino representan el potencial de tu personaje. Empiezas con un número determinado por tu edad. Puedes invertir Puntos de Destino en **Beneficios** (cualidades especiales, talentos, conexiones).
+Los Puntos de Destino representan el potencial de tu personaje. Empiezas con un número determinado por tu edad. Puedes invertir Puntos de Destino en **Beneficios**.
 
 | Edad | Puntos de Destino | Máx. Beneficios |
 |:-----|:-----------------:|:---------------:|
@@ -75,27 +75,16 @@ Los Puntos de Destino representan el potencial de tu personaje. Empiezas con un 
 
 ## ⚠️ Paso 6: Defectos
 
-Los defectos reflejan los estragos del tiempo y los peligros del mundo. Debes tomar los defectos según tu edad.
-
-- **Fallo:** Impone -1D a una habilidad
-- **Defecto:** Impone desafíos más amplios
+Debes tomar los defectos según tu edad (ver tabla en el manual).
+- **Fallo:** Impone -1D a una habilidad.
+- **Defecto:** Impone desafíos más amplios.
 
 ---
 
 ## 💰 Paso 7: Posesiones Iniciales
 
-Todos los personajes comienzan con:
-
-- 👕 Ropa común
-- 👢 Botas o zapatos
-- 🗡️ Una daga
-
-Los **herederos** también comienzan con un **anillo de sello**.
-
-A continuación, haz una **prueba de Estatus**. El resultado es con cuántas **piezas de oro** comienzas para comprar tu equipo inicial.
-
-!!! warning "⚠️ Regla"
-    Debes gastar **al menos la mitad** de tu moneda inicial.
+Todos los personajes comienzan con: ropa común, botas/zapatos y una daga. Los **herederos** también comienzan con un **anillo de sello**.
+Haz una **prueba de Estatus**. El resultado es con cuántas **piezas de oro** comienzas. Debes gastar al menos la mitad de tu moneda inicial.
 
 ---
 
@@ -104,17 +93,15 @@ A continuación, haz una **prueba de Estatus**. El resultado es con cuántas **p
 Rellena las estadísticas derivadas en tu hoja de personaje:
 
 ### 🎭 Estadísticas de Intriga
-
 | Estadística | Fórmula |
 |:------------|:--------|
 | **Defensa de Intriga** | Alerta + Astucia + Estatus |
 | **Compostura** | 3 × Voluntad |
 
 ### ⚔️ Estadísticas de Combate
-
 | Estadística | Fórmula |
 |:------------|:--------|
-| **Defensa de Combate** | Agilidad + Atletismo + Alerta + Bonus Defensivo (escudos/parada) |
+| **Defensa de Combate** | Agilidad + Atletismo + Alerta + Bonus Defensivo |
 | **Salud** | 3 × Resistencia |
 | **Armadura (RA)** | Basada en la armadura equipada |
 | **Daño** | Basado en el arma equipada |
@@ -122,12 +109,4 @@ Rellena las estadísticas derivadas en tu hoja de personaje:
 ---
 
 ## 🎉 Paso 9: ¡A Jugar!
-
-El último paso es rellenar el resto de la hoja de personaje:
-
-- 📝 Nombre
-- 🏠 Lugar de nacimiento
-- 👨‍👩‍👧‍👦 Padres, hermanos
-- 🛡️ Escudo de armas y lema (opcional)
-
-¡Una vez llena, **estás listo para jugar**!
+Rellena el resto de la hoja: nombre, lugar de nacimiento, padres, hermanos, escudo de armas y lema. ¡Una vez llena, estás listo para jugar!
