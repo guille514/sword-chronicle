@@ -38,6 +38,8 @@ nav:
   - Creación de Personajes:
     - Introducción y Concepto: creacion/introduccion.md
     - Habilidades y Estadísticas: creacion/asignar-stats.md
+    - Destino y Defectos: creacion/destino-y-defectos.md
+    - Posesiones y Estadísticas: creacion/posesiones-y-estadisticas.md
     - Recompensas y Resumen: creacion/recompensas.md
   - Habilidades y Especialidades:
     - Resumen: habilidades/resumen.md
@@ -56,3 +58,32 @@ nav:
     - Arte de la Adivinación: magia/adivinacion.md
     - Arte de la Maldición: magia/maldicion.md
     - Arte de la Protección: magia/proteccion.md
+  - Equipo:
+    - Economía y Equipo Personal: equipo/economia.md
+    - Armas: equipo/armas.md
+    - Armaduras y Monturas: equipo/armaduras_y_monturas.md
+    - Venenos: equipo/venenos.md
+  - Intriga:
+    - Introducción: intriga/introduccion.md
+    - Intrigas Estándar: intriga/intrigas_estandar.md
+    - Técnicas y Acciones: intriga/tecnicas_y_acciones.md
+    - Resolución y Derrota: intriga/resolucion.md
+  - Combate:
+    - Fundamentos: combate/fundamentos.md
+    - Estructura: combate/estructura.md
+    - Acciones y Daño: combate/acciones.md
+    - Avanzado y Torneos: combate/avanzado.md
+  - Guerra:
+    - Fundamentos y Componentes: guerra/fundamentos.md
+    - Anatomía de una Batalla: guerra/anatomia.md
+    - Resolución y Reglas Avanzadas: guerra/resolucion.md
+  - El Narrador:
+    - Conceptos y Gestión: narrador/introduccion.md
+    - Mundo y Peligros: narrador/mundo_y_peligros.md
+    - Personajes y Criaturas: narrador/personajes_y_criaturas.md
+    - Estilos de Juego: narrador/estilos_de_juego.md
+  - La Era Fragmentada:
+    - Introducción y Historia: setting/introduccion.md
+    - Pueblos de la Brecha: setting/pueblos.md
+    - Órdenes y Reinos Monstruosos: setting/ordenes_y_monstruos.md
+    - Casas de la Brecha: setting/casas.md
